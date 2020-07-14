@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blt.shoppingServer.dao.GoodsDao">
+    <select id="queryGoodList" parameterType="java.util.HashMap" resultType="com.blt.shoppingServer.entity.GoodsEntity">
+        SELECT
+            goods.goodsId,
+            goods.goodsName,
+            goods.goodsPrices,
+            goods.stock,
+            goods.goodsBrand,
+            goods.goodsSummary,
+            goods.goodsClass,
+            goods.goodsImg,
+            goods.salesvolume
+        FROM
+            goods
+        <where>
+            <if test="value!=null">
+                goodsName like '%${value}%' or goodsClass like '%${value}%' or goodsSummary like '%${value}%' or goodsBrand like '%${value}%'
+            </if>
+        </where>
+        order by salesvolume DESC
+    </select>
+    <select id="queryGood" parameterType="com.blt.shoppingServer.entity.GoodsEntity" resultType="com.blt.shoppingServer.entity.GoodsEntity">
+        select * from
+        goods
+        where  goodsId=#{goodsId}
+    </select>
+</mapper>

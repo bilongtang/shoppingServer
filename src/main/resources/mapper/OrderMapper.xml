@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blt.shoppingServer.dao.OrderDao">
+    <select id="queryOrders" parameterType="com.blt.shoppingServer.entity.OrdersEntity" resultType="com.blt.shoppingServer.entity.OrdersEntity">
+        select *  from
+        orders
+        <where>
+            state=#{state} and userId=#{userId}
+            <if test="value!=null">
+               and ( goodsName like '%${value}%' )
+            </if>
+        </where>
+        order by transactionNumber DESC
+    </select>
+    <insert id="insertOrder" parameterType="com.blt.shoppingServer.entity.OrdersEntity">
+        INSERT INTO orders (goodsOrderId, orderId, goodsName, goodsPrices, buyNumber, totalPrice, goodsBrand, goodsSummary, goodsImg, orderState, transactionDate, adderssIms, goodsId, userId)
+        VALUES (#{goodsOrderId}, #{orderId}, #{goodsName}, #{goodsPrices}, #{buyNumber}, #{totalPrice}, #{goodsBrand}, #{goodsSummary}, #{goodsImg}, #{orderState}, #{transactionDate}, #{adderssIms}, #{goodsId}, #{userId});
+    </insert>
+    <delete id="deleteOrder" parameterType="com.blt.shoppingServer.entity.OrdersEntity">
+        delete
+        from orders
+        where orderId=#{orderId}
+    </delete>
+    <update id="modifyOrder" parameterType="com.blt.shoppingServer.entity.OrdersEntity">
+        update orders
+        <trim prefix="set" suffixOverrides=",">
+            <if test="adderssIms!=null">
+                adderssIms=#{adderssIms}
+            </if>
+            <if test="orderState!=null">
+                orderState=#{orderState}
+            </if>
+        </trim>
+            where orderId=#{orderId}
+    </update>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blt.shoppingServer.dao.UserDao">
+    <select id="login" resultType="com.blt.shoppingServer.entity.UserEntity" parameterType="com.blt.shoppingServer.entity.UserEntity">
+        select * from user
+        where userId=#{userId} and passWord=#{passWord}
+    </select>
+    <update id="modifyUser"  parameterType="com.blt.shoppingServer.entity.UserEntity">
+        update user
+        <trim prefix="set" prefixOverrides=",">
+            <if test="userName!=null">
+                userName=#{userName}
+            </if>
+            <if test="phoneNumber">
+                email=#{email}
+            </if>
+            <if test="passWord!=null">
+                passWord=#{passWord}
+            </if>
+        </trim>
+        where userId=#{userId}
+    </update>
+    <select id="queryUser" resultType="com.blt.shoppingServer.entity.UserEntity" parameterType="java.util.HashMap">
+            select * from user
+            where (email=#{check} or phoneNumber=#{check}) and userId=#{userId}
+    </select>
+    <insert id="insertUser" parameterType="com.blt.shoppingServer.entity.UserEntity">
+        INSERT INTO `user` ( userId, userName, `passWord`, `type`, phoneNumber, email )
+        VALUES
+            ( #{userId}, #{userName}, #{passWord}, #{type}, #{phoneNumber}, #{email} );
+    </insert>
+</mapper>

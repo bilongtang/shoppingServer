@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blt.shoppingServer.dao.AddresslistDao">
+    <insert id="insertAddress" parameterType="com.blt.shoppingServer.entity.AddresslistEntity">
+        INSERT INTO addresslist ( addressId, receiverName, receiverPhone, receiverAddress, userId )
+        VALUES
+            ( #{addressId},#{receiverName}, #{receiverPhone},#{receiverAddress}, #{userId} );
+    </insert>
+    <update id="modifyAddress" parameterType="com.blt.shoppingServer.entity.AddresslistEntity">
+        UPDATE addresslist
+        <trim prefix="set" suffixOverrides=",">
+            <if test="receiverName!=null">
+                receiverName = #{receiverName},
+            </if>
+            <if test="receiverPhone!=null">
+                receiverPhone = #{receiverPhone},
+            </if>
+            <if test="receiverAddress!=null">
+                receiverAddress = #{receiverAddress},
+            </if>
+        </trim>
+        WHERE
+            addressId = #{addressId};
+    </update>
+    <delete id="deleteAddress" parameterType="com.blt.shoppingServer.entity.AddresslistEntity">
+        delete
+        from addresslist
+        where
+            addressId=#{addressId}
+    </delete>
+    <select id="queryAddresslist" parameterType="java.util.HashMap" resultType="com.blt.shoppingServer.entity.AddresslistEntity">
+        SELECT
+            addresslist.addressId,
+            addresslist.receiverName,
+            addresslist.receiverPhone,
+            addresslist.receiverAddress
+        FROM
+            addresslist
+       <where>
+           addresslist.userId = #{userId}
+            <if test="value!=null">
+               and ( receiverName like '%${value}%' or receiverPhone like '%${value}%' or receiverAddress like '%${value}%')
+            </if>
+       </where>
+    </select>
+    <select id="queryAddress" parameterType="com.blt.shoppingServer.entity.AddresslistEntity" resultType="com.blt.shoppingServer.entity.AddresslistEntity">
+        SELECT
+            addresslist.addressId,
+            addresslist.receiverName,
+            addresslist.receiverPhone,
+            addresslist.receiverAddress
+        FROM
+           addresslist
+        where
+            addressId=#{addressId}
+    </select>
+</mapper>

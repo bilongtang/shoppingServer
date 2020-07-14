@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blt.shoppingServer.dao.ShoppingCartDao">
+    <resultMap id="shoppingCartList" type="com.blt.shoppingServer.entity.ShoppingCartEntity">
+        <id property="cartId" column="cartId" />
+        <result property="goodsId" column="goodsId" />
+        <result property="buyNumber" column="buyNumber" />
+        <association property="good" javaType="com.blt.shoppingServer.entity.GoodsEntity">
+            <!-- id:声明主键，表示user_id是关联查询对象的唯一标识-->
+            <id property="goodsId" column="goodsId" />
+            <result property="goodsName" column="goodsName" />
+            <result property="goodsPrices" column="goodsPrices" />
+            <result property="stock" column="stock" />
+            <result property="goodsImg" column="goodsImg" />
+        </association>
+    </resultMap>
+    <select id="queryShoppingCartList" resultMap="shoppingCartList" parameterType="java.util.HashMap">
+        SELECT
+            shoppingcart.cartId,
+            shoppingcart.goodsId,
+            shoppingcart.buyNumber,
+            goods.goodsName,
+            goods.goodsPrices,
+            goods.stock,
+            goods.goodsImg
+        FROM
+                `user`
+                INNER JOIN shoppingcart ON shoppingcart.userId = `user`.userId
+                INNER JOIN goods ON shoppingCart.goodsId = goods.goodsId
+        WHERE
+            [User].userId = #{userId}
+    </select>
+    <delete id="deleteShoppingCartGood" parameterType="java.lang.String">
+        delete
+        from shoppingcart
+        where cartId=#{0}
+    </delete>
+    <update id="modifyShoppingCartGood" parameterType="com.blt.shoppingServer.entity.ShoppingCartEntity">
+        UPDATE shoppingcart
+        SET  buyNumber = #{buyNumber}
+        WHERE cartId=#{cartId}
+    </update>
+    <insert id="insertShoppingCartGood" parameterType="com.blt.shoppingServer.entity.ShoppingCartEntity" >
+        INSERT INTO shoppingcart (cartId, goodsId, buyNumber, userId)
+        VALUES (#{cartId}, #{goodsId}, #{buyNumber},#{userId});
+    </insert>
+</mapper>
